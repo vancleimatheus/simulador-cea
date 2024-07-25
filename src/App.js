@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -40,8 +40,23 @@ const matchesList = [
 ];
 
 const App = () => {
-  const [teams, setTeams] = useState(initialTeams);
-  const [scores, setScores] = useState({});
+  const [teams, setTeams] = useState(() => {
+    const savedTeams = localStorage.getItem('teams');
+    return savedTeams ? JSON.parse(savedTeams) : initialTeams;
+  });
+
+  const [scores, setScores] = useState(() => {
+    const savedScores = localStorage.getItem('scores');
+    return savedScores ? JSON.parse(savedScores) : {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem('teams', JSON.stringify(teams));
+  }, [teams]);
+
+  useEffect(() => {
+    localStorage.setItem('scores', JSON.stringify(scores));
+  }, [scores]);
 
   const handleScoreChange = (index, team1Score, team2Score) => {
     const newScores = { ...scores, [index]: { team1Score, team2Score } };
@@ -70,41 +85,57 @@ const App = () => {
     setTeams(newTeams);
   };
 
+  const resetScores = () => {
+    setScores({});
+    setTeams(initialTeams);
+    localStorage.removeItem('teams');
+    localStorage.removeItem('scores');
+  };
+
   const standings = Object.entries(teams).sort((a, b) => b[1] - a[1]);
 
   return (
-    <div className="App container">
-      <h1 className="my-4">Simulador CEA</h1>
+    <div className="App container my-4">
+      <h1 className="text-center mb-4">Simulador CEA</h1>
+      <button className="btn btn-danger mb-4" onClick={resetScores}>Limpar tudo</button>
       <div className="row">
         <div className="col-md-8">
-          <div className="matches mb-4">
+          <div className="matches mb-4 row">
             {matchesList.map(([team1, team2], index) => (
-              <div key={index} className="match row mb-2">
-                <div className="col-md-4">
-                  <span>{team1} vs {team2}</span>
+              <div key={index} className="match row mb-2 align-items-center">
+                <div className="col-4 col-md-4">
+                  <span>{team1}</span>
                 </div>
-                <div className="col-md-3">
+                <div className="col-2 col-md-2">
                   <input
                     type="number"
                     className="form-control"
                     value={scores[index]?.team1Score || ""}
-                    onChange={(e) => handleScoreChange(index, e.target.value !== "" ? parseInt(e.target.value) : "", scores[index]?.team2Score !== undefined ? scores[index].team2Score : "")}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => handleScoreChange(index, e.target.value !== "0" ? parseInt(e.target.value) : "0", scores[index]?.team2Score !== undefined ? scores[index].team2Score : "0")}
                   />
                 </div>
-                <div className="col-md-3">
+                <div className="col-1 text-center">&nbsp;X&nbsp;</div>
+                <div className="col-2 col-md-2">
                   <input
                     type="number"
                     className="form-control"
                     value={scores[index]?.team2Score || ""}
-                    onChange={(e) => handleScoreChange(index, scores[index]?.team1Score !== undefined ? scores[index].team1Score : "", e.target.value !== "" ? parseInt(e.target.value) : "")}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => handleScoreChange(index, scores[index]?.team1Score !== undefined ? scores[index].team1Score : "0", e.target.value !== "0" ? parseInt(e.target.value) : "0")}
                   />
                 </div>
+                <div className="col-3 col-md-2">{team2}</div>
               </div>
             ))}
-          </div>      
+          </div>
         </div>
         <div className="col-md-4">
-          <table className="table table-striped">
+          <table className="table table-striped table-bordered">
             <thead>
               <tr>
                 <th>Time</th>
