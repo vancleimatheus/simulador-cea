@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/simulador-cea/static/css/main.6be74069.css",
-    "main.js": "/simulador-cea/static/js/main.33db1468.js",
+    "main.js": "/simulador-cea/static/js/main.38a04e99.js",
     "static/js/453.edb8dcd6.chunk.js": "/simulador-cea/static/js/453.edb8dcd6.chunk.js",
     "index.html": "/simulador-cea/index.html",
     "main.6be74069.css.map": "/simulador-cea/static/css/main.6be74069.css.map",
-    "main.33db1468.js.map": "/simulador-cea/static/js/main.33db1468.js.map",
+    "main.38a04e99.js.map": "/simulador-cea/static/js/main.38a04e99.js.map",
     "453.edb8dcd6.chunk.js.map": "/simulador-cea/static/js/453.edb8dcd6.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6be74069.css",
-    "static/js/main.33db1468.js"
+    "static/js/main.38a04e99.js"
   ]
 }
