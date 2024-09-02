@@ -2,34 +2,26 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+const currentVersion = "1.04";  // Define the current version of your application
+
 const initialTeams = {
-  "Londrina": 16,
-  "Cascavel": 13,
-  "ACP": 12,
-  "Operário": 12,
-  "Cianorte": 11,
-  "Rio Branco": 10,
-  "Portuguesa": 10,
-  "Bandeirantes": 9,
-  "Malutron": 7,
-  "Maringá": 7,
-  "Pinheiros": 6,
-  "Matsubara": 4,
+  "Londrina": 22,
+  "Cascavel": 16,
+  "ACP": 24,
+  "Operário": 13,
+  "Cianorte": 21,
+  "Rio Branco": 20,
+  "Portuguesa": 20,
+  "Bandeirantes": 21,
+  "Malutron": 16,
+  "Maringá": 11,
+  "Pinheiros": 15,
+  "Matsubara": 5,
   "Colorado": 3,
   "Comercial": 0
 };
 
 const matchesList = [
-  ["Colorado", "Malutron"], ["Portuguesa", "Cianorte"], ["ACP", "Operário"], 
-  ["Comercial", "Pinheiros"], ["Bandeirantes", "Maringá"], ["Londrina", "Matsubara"],
-  ["Maringá", "Colorado"], ["Malutron", "Comercial"], ["Cianorte", "Rio Branco"], 
-  ["Cascavel", "Londrina"], ["Matsubara", "Operário"], ["Pinheiros", "Portuguesa"],
-  ["Maringá", "ACP"], ["Malutron", "Bandeirantes"], ["Cianorte", "Comercial"],
-  ["Cascavel", "Portuguesa"], ["Matsubara", "Rio Branco"], ["Pinheiros", "Colorado"],
-  ["Colorado", "Cianorte"], ["Portuguesa", "Matsubara"], ["Rio Branco", "Operário"],
-  ["ACP", "Londrina"], ["Comercial", "Cascavel"], ["Bandeirantes", "Pinheiros"],
-  ["Portuguesa", "Bandeirantes"], ["Cascavel", "ACP"], ["Rio Branco", "Maringá"],
-  ["Matsubara", "Cianorte"], ["Operário", "Pinheiros"], ["Londrina", "Malutron"],
   ["Operário", "Londrina"], ["Rio Branco", "Cascavel"], ["Bandeirantes", "ACP"],
   ["Maringá", "Malutron"], ["Comercial", "Colorado"], ["Londrina", "Cianorte"],
   ["Colorado", "Bandeirantes"], ["Portuguesa", "Malutron"], ["ACP", "Matsubara"],
@@ -40,22 +32,38 @@ const matchesList = [
 ];
 
 const App = () => {
-  const [teams, setTeams] = useState(() => {
-    const savedTeams = localStorage.getItem('teams');
-    return savedTeams ? JSON.parse(savedTeams) : initialTeams;
-  });
-
-  const [scores, setScores] = useState(() => {
-    const savedScores = localStorage.getItem('scores');
-    return savedScores ? JSON.parse(savedScores) : {};
-  });
+  const [teams, setTeams] = useState(null);
+  const [scores, setScores] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem('teams', JSON.stringify(teams));
+    const savedVersion = localStorage.getItem('version');
+
+    if (!savedVersion || savedVersion < currentVersion) {
+      setTimeout(() => {
+        // Clear local storage and set the current version
+        localStorage.clear();
+        localStorage.setItem('version', currentVersion);
+        resetScores();        
+      }, 300);
+    } else {
+      // Load from local storage
+      const savedTeams = localStorage.getItem('teams');
+      const savedScores = localStorage.getItem('scores');
+      setTeams(savedTeams ? JSON.parse(savedTeams) : initialTeams);
+      setScores(savedScores ? JSON.parse(savedScores) : {});
+    }
+  }, []);
+
+  useEffect(() => {
+    if (teams !== null) {
+      localStorage.setItem('teams', JSON.stringify(teams));
+    }
   }, [teams]);
 
   useEffect(() => {
-    localStorage.setItem('scores', JSON.stringify(scores));
+    if (scores !== null) {
+      localStorage.setItem('scores', JSON.stringify(scores));
+    }
   }, [scores]);
 
   const handleScoreChange = (index, team1Score, team2Score) => {
@@ -92,11 +100,16 @@ const App = () => {
     localStorage.removeItem('scores');
   };
 
+  if (teams === null || scores === null) {
+    // Render nothing or a loading state until initialization is complete
+    return <div>Loading...</div>;
+  }
+
   const standings = Object.entries(teams).sort((a, b) => b[1] - a[1]);
 
   return (
     <div className="App container my-4">
-      <h1 className="text-center mb-4">Simulador CEA</h1>
+      <h1 className="text-center mb-4">Simulador CEA</h1>      
       <button className="btn btn-danger mb-4" onClick={resetScores}>Limpar tudo</button>
       <div className="row">
         <div className="col-md-8">
@@ -153,8 +166,9 @@ const App = () => {
           </table>
         </div>
       </div>
+      <small>version {currentVersion}</small>
     </div>
   );
-}
+};
 
 export default App;
