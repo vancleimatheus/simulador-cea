@@ -2,33 +2,37 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-const currentVersion = "1.04";  // Define the current version of your application
+const currentVersion = "2.00";  // Define the current version of your application
 
 const initialTeams = {
-  "Londrina": 22,
-  "Cascavel": 16,
-  "ACP": 24,
-  "Operário": 13,
-  "Cianorte": 21,
-  "Rio Branco": 20,
-  "Portuguesa": 20,
-  "Bandeirantes": 21,
-  "Malutron": 16,
-  "Maringá": 11,
-  "Pinheiros": 15,
-  "Matsubara": 5,
-  "Colorado": 3,
-  "Comercial": 0
+  "Juventus": 19,
+  "Fiorentina": 17,
+  "Parma": 16,
+  "Torino": 13,
+  "Sampdoria": 13,
+  "Palermo": 11,
+  "Roma": 10,
+  "Napoli": 10,
+  "Atalanta": 10,
+  "Lazio": 9,
+  "Verona": 8,
+  "Milan": 7,
+  "Udinese": 3,
+  "Internazionale": 0
 };
 
 const matchesList = [
-  ["Operário", "Londrina"], ["Rio Branco", "Cascavel"], ["Bandeirantes", "ACP"],
-  ["Maringá", "Malutron"], ["Comercial", "Colorado"], ["Londrina", "Cianorte"],
-  ["Colorado", "Bandeirantes"], ["Portuguesa", "Malutron"], ["ACP", "Matsubara"],
-  ["Rio Branco", "Pinheiros"], ["Operário", "Cascavel"], ["Comercial", "Maringá"],
-  ["ACP", "Comercial"], ["Matsubara", "Malutron"], ["Londrina", "Rio Branco"],
-  ["Operário", "Colorado"], ["Bandeirantes", "Cascavel"], ["Pinheiros", "Cianorte"],
-  ["Maringá", "Portuguesa"]
+  ["Napoli", "Internazionale"], ["Palermo", "Juventus"], ["Fiorentina", "Sampdoria"],
+  ["Parma", "Roma"], ["Udinese", "Lazio"], ["Milan", "Atalanta"],
+  ["Roma", "Fiorentina"], ["Atalanta", "Udinese"], ["Lazio", "Torino"],
+  ["Internazionale", "Verona"], ["Sampdoria", "Milan"], ["Juventus", "Parma"],
+  ["Atalanta", "Juventus"], ["Milan", "Internazionale"], ["Lazio", "Napoli"],
+  ["Udinese", "Fiorentina"], ["Torino", "Parma"], ["Verona", "Palermo"],
+  ["Torino", "Verona"], ["Lazio", "Milan"], ["Juventus", "Internazionale"], ["Napoli", "Palermo"], 
+  ["Sampdoria", "Roma"], ["Roma", "Juventus"], ["Atalanta", "Palermo"], ["Internazionale", "Udinese"], 
+  ["Lazio", "Palermo"], ["Torino", "Milan"], ["Sampdoria", "Napoli"], ["Verona", "Fiorentina"],
+  ["Udinese", "Palermo"],["Verona", "Lazio"],["Torino", "Roma"],["Juventus", "Milan"],["Parma", "Fiorentina"],
+  ["Napoli", "Atalanta"],["Internazionale", "Sampdoria"]
 ];
 
 const App = () => {
